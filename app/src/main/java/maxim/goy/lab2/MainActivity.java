@@ -2,40 +2,40 @@ package maxim.goy.lab2;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.util.Locale;
-
 public class MainActivity extends AppCompatActivity {
-    SeekBar procent;
-    EditText sum, viewProcent, initialPayment, year;
+    SeekBar present;
+    EditText sum, viewPresent, initialPayment, year;
     RadioButton typePayment;
-    TextView overpaymant, viewSum, generalSumPayment, procentOverpayment;
+    TextView overpayment, viewSum, generalSumPayment, presentOverpayment, avePay, viewAvePay;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        procent = findViewById(R.id.procent);
+        present = findViewById(R.id.procent);
         sum = findViewById(R.id.sum);
-        viewProcent = findViewById(R.id.viewProcent);
+        viewPresent = findViewById(R.id.viewProcent);
         initialPayment = findViewById(R.id.initialPayment);
         year = findViewById(R.id.year);
+        typePayment = findViewById(R.id.differentiated);
 
-        overpaymant = findViewById(R.id.overpayment);
+        overpayment = findViewById(R.id.overpayment);
         viewSum = findViewById(R.id.viewSum);
-        generalSumPayment = findViewById(R.id.viewSum);
-        procentOverpayment = findViewById(R.id.procentOverpayment);
+        generalSumPayment = findViewById(R.id.generalSumPayment);
+        presentOverpayment = findViewById(R.id.procentOverpayment);
+        avePay = findViewById(R.id.avePay);
+        viewAvePay = findViewById(R.id.textView9);
 
         sum.addTextChangedListener(new TextWatcher() {
             @Override
@@ -52,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        procent.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        present.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                viewProcent.setText(String.valueOf(procent.getProgress()));
+                viewPresent.setText(String.valueOf(present.getProgress()));
             }
 
             @Override
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        viewProcent.addTextChangedListener(new TextWatcher() {
+        viewPresent.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                procent.setProgress(Integer.valueOf(String.valueOf(viewProcent.getText())), true);
+                present.setProgress(Integer.parseInt(String.valueOf(viewPresent.getText())), true);
             }
 
             @Override
@@ -84,18 +84,30 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        typePayment = findViewById(R.id.differentiated);
+
     }
 
+    @SuppressLint("SetTextI18n")
     public void calculateCredit(View view) {
         float sum = Float.parseFloat(String.valueOf(this.sum.getText()));
-        Credit.typePayment typePay = this.typePayment.isActivated() ?
+        Credit.typePayment typePay = this.typePayment.isChecked() ?
                 Credit.typePayment.Differentiated : Credit.typePayment.Annuity;
         float initialPayment = Float.parseFloat(String.valueOf(this.initialPayment.getText()));
-        float procent = Float.parseFloat(String.valueOf(viewProcent.getText()));
+        float present = Float.parseFloat(String.valueOf(viewPresent.getText()));
         float year = Float.parseFloat(String.valueOf(this.year.getText()));
-        Credit credit = new Credit(sum, initialPayment, typePay, procent, year);
-        double summ = credit.credit();
-        viewSum.setText(summ + "");
+        Credit credit = new Credit(sum, initialPayment, typePay, present, year);
+        credit.credit();
+        viewSum.setText(credit.getSumCredit() + "");
+        presentOverpayment.setText(credit.getPresentOverpayment() + "");
+        generalSumPayment.setText(credit.getGeneralSum() + "");
+        overpayment.setText(credit.getOverPayment() + "");
+        if (typePay == Credit.typePayment.Annuity) {
+            avePay.setVisibility(View.VISIBLE);
+            viewAvePay.setVisibility(View.VISIBLE);
+            avePay.setText(credit.getAvePay() + "");
+        } else {
+            avePay.setVisibility(View.INVISIBLE);
+            viewAvePay.setVisibility(View.INVISIBLE);
+        }
     }
 }

@@ -8,49 +8,75 @@ public class Credit {
     float percent;
     float year;
     int month;
+    float initialPayment;
+
+    float overPayment = 0;
+    float generalSum = 0;
+    float presentOverpayment;
+    float avePay;
 
     public Credit(float sum, float initialPayment, typePayment typePay, float percent, float year) {
         this.sum = sum - initialPayment;
+        this.initialPayment = initialPayment;
         this.typePay = typePay;
         this.percent = percent;
         this.year = year;
         this.month = (int) year * 12;
     }
 
-    public double credit() {
+    public void credit() {
         switch (typePay) {
             case Differentiated:
-                return diff();
+                diff();
+                break;
             case Annuity:
-                return ann();
+                ann();
+                break;
         }
-        return 0;
+        overPayment = generalSum - sum;
+        presentOverpayment = overPayment / sum * 100;
     }
 
-    public double diff() {
-        month = (int) year * 12;
+    private void diff() {
         float avePay = sum / (float) month;
-        float allSum = 0;
         System.out.println("средний платеж " + avePay);
 
         for (int i = 0; i < month; i++) {
-            float monthPay = avePay + (sum - avePay * i) * percent / 12;
-            allSum += monthPay;
-            Log.d("Credit", i + 1 + " месяц " + monthPay);
+            float monthPay = avePay + (sum - avePay * i) * (percent / 100) / 12;
+            generalSum += monthPay;
         }
-        return allSum;
     }
 
-    public double ann() {
-        float avePay = (float) ((sum * ((percent * 100) / (12 * 100))) /
-                (1 - Math.pow((1 + ((percent * 100) / (12 * 100))), -month)));
+    private void ann() {
+        avePay = (float) ((sum * ((percent) / (12 * 100))) /
+                (1 - Math.pow((1 + ((percent) / (12 * 100))), -month)));
+        generalSum = avePay * month;
 
-        return avePay;
     }
 
     //1 - Диффир 2 - Анн
     enum typePayment {
         Differentiated,
         Annuity
+    }
+
+    public int getSumCredit() {
+        return (int) sum;
+    }
+
+    public float getGeneralSum() {
+        return generalSum;
+    }
+
+    public float getPresentOverpayment() {
+        return presentOverpayment;
+    }
+
+    public float getOverPayment() {
+        return overPayment;
+    }
+
+    public float getAvePay() {
+        return avePay;
     }
 }
