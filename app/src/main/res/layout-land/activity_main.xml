@@ -86,14 +86,14 @@
 
         <RadioButton
             android:id="@+id/differentiated"
-            android:layout_width="161dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:checked="true"
             android:text="Дифференцированный" />
 
         <RadioButton
             android:id="@+id/annuity"
-            android:layout_width="170dp"
+            android:layout_width="142dp"
             android:layout_height="match_parent"
             android:text="Аннуитетный" />
     </RadioGroup>
