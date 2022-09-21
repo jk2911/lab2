@@ -118,6 +118,7 @@
         android:backgroundTint="@android:color/holo_green_dark"
         android:onClick="calculateCredit"
         android:text="Рассчитать"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"

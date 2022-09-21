@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     RadioButton typePayment;
     TextView overpayment, viewSum, generalSumPayment, presentOverpayment, avePay, viewAvePay,
             incorrectMessage;
+    Button button;
 
 
     @Override
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         year = findViewById(R.id.year);
         typePayment = findViewById(R.id.differentiated);
         incorrectMessage = findViewById(R.id.incorrectMessage);
+        button = findViewById(R.id.calculate);
 
         overpayment = findViewById(R.id.overpayment);
         viewSum = findViewById(R.id.viewSum);
@@ -132,8 +135,6 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void calculateCredit(View view) {
-        Toast toast = Toast.makeText(this, "Hello Android!", Toast.LENGTH_LONG);
-        toast.show();
         float sum = Float.parseFloat(String.valueOf(this.sum.getText()));
         Credit.typePayment typePay = this.typePayment.isChecked() ?
                 Credit.typePayment.Differentiated : Credit.typePayment.Annuity;
@@ -161,7 +162,10 @@ public class MainActivity extends AppCompatActivity {
         int initialPayment = Integer.parseInt(this.initialPayment.getText().toString());
         if (sum < initialPayment) {
             incorrectMessage.setVisibility(View.VISIBLE);
-        } else
+            button.setClickable(false);
+        } else{
             incorrectMessage.setVisibility(View.INVISIBLE);
+            button.setClickable(true);
+        }
     }
 }
